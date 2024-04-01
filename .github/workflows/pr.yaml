@@ -21,16 +21,3 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/pre-commit
-
-  open-release-pr:
-    # run only for pushes to a 'release-X-Y-Z' branch
-    # the process to create these branches is automated via `make release v=X.Y.Z`
-    if: ${{ github.event_name == 'push' && startsWith(github.ref_name, 'release-') }}
-    needs:
-      - pre_commit
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: gh pr create --base main --title "${{ github.ref_name }}" --body ""
-        shell: bash
-    # TODO: explore reinstating `gh pr merge --auto --rebase`
