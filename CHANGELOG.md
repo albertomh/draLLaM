@@ -9,6 +9,8 @@ This Changelog is automatically stamped by `cut_release.sh` as part of creating 
 
 ## [Unreleased]
 
+## [0.1.0] - 2024-04-01
+
 ### Added
 
 - Containerised embeddings service powered by ollama under the hood.
