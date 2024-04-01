@@ -1,0 +1,44 @@
+# draLLaM Continuous Integration pipeline
+# Runs when a Pull Request is merged into the 'main' branch.
+#
+# (c) 2024 Alberto Morón Hernández
+name: CI
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+
+env:
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  REGISTRY: ghcr.io
+
+jobs:
+  pre_commit:
+    # proceed only when a PR is closed by a merge
+    if: ${{ github.event.pull_request.merged }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/pre-commit
+
+  # containerisation for non-release branches
+  containerise:
+    if: ${{ ! startsWith(github.head_ref, 'release-') }}
+    needs:
+      - pre_commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          echo "REPO_NAME=${GITHUB_REPOSITORY@L}" >> $GITHUB_ENV
+          echo "REF_NAME=${GITHUB_REF_NAME}" >> $GITHUB_ENV
+        shell: bash
+      - uses: ./.github/actions/containerise
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+          tags: ${{ env.REGISTRY }}/${{ env.REPO_NAME }}/${{ env.REF_NAME }}:latest

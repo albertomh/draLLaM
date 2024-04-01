@@ -1,12 +1,15 @@
 # draLLaM
 
 DepositDuck's LLM service.  
-This project produces a single artefact: a container image that provides an endpoint to
+Produces a single artefact: a container image that provides an endpoint to
 generate token embeddings. Powered by `ollama`.
 
-## Develop
-
+[![GNU make](https://img.shields.io/badge/GNU_make-f2efe4?logo=gnu&logoColor=a32d2a)](https://github.com/pre-commit/pre-commit)
 [![pre-commit](https://img.shields.io/badge/pre--commit-FAB040?logo=pre-commit&logoColor=1f2d23)](https://github.com/pre-commit/pre-commit)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=ffffff)](https://docs.docker.com/manuals/)
+[![ollama](https://img.shields.io/badge/%F0%9F%A6%99%20ollama-black.svg)](https://ollama.com/)
+
+## Develop
 
 ### Prerequisites
 
@@ -76,7 +79,7 @@ Please follow the [Conventional Commits](https://www.conventionalcommits.org/en/
 guidelines when writing commit messages.
 `commitlint` is enabled as a pre-commit hook. Valid commit types are defined in `.commitlintrc.yaml`.
 
-##  Continuous Integration
+## Continuous Integration
 
 ## Deploy
 
