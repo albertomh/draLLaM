@@ -102,6 +102,19 @@ and GitHub release when a release branch (see below) is merged.
 1. Review and merge (merge-and-rebase) the PR.
 1. This will trigger a pipeline to tag the `main` branch and create a GitHub release.
 
+### Build and tag a container image
+
+Containers must be built locally in order to bake model blob and manifest files into the
+image. Do this with:
+
+```sh
+# by default will use the latest tag fetched from the remote origin
+./local/containerise_from_tag.sh
+
+# optionally, specify the tag to build from
+./local/containerise_from_tag.sh X.Y.Z
+```
+
 ---
 &copy; 2024 Alberto MH  
 This work is licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
