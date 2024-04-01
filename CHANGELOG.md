@@ -10,3 +10,5 @@ This Changelog is automatically stamped by `cut_release.sh` as part of creating 
 ## [Unreleased]
 
 ### Added
+
+- Containerised embeddings service powered by ollama under the hood.
