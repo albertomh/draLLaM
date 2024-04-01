@@ -1,6 +1,10 @@
 # draLLaM Continuous Integration pipeline
 # Runs when a Pull Request is merged into the 'main' branch.
 #
+# Step 'release' requires that a GH_TOKEN repository secret exist in GitHub:
+# https://github.com/albertomh/draLLaM/settings/secrets/actions
+# the value must be a PAT scoped to read & write pull requests.
+#
 # (c) 2024 Alberto Morón Hernández
 name: CI
 
@@ -23,6 +27,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/pre-commit
+
+  # tag, create release and containerise when a 'release-' branch is merged
+  release:
+    if: ${{ startsWith(github.head_ref, 'release-') }}
+    needs:
+      - pre_commit
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "REPO_NAME=${GITHUB_REPOSITORY@L}" >> $GITHUB_ENV
+          echo "BASE_REF=${GITHUB_BASE_REF}" >> $GITHUB_ENV
+          echo "TAG=${GITHUB_HEAD_REF#release-}" >> $GITHUB_ENV
+        shell: bash
+      - uses: ./.github/actions/tag-and-release
+        with:
+          tag: ${{ env.TAG }}
+      - uses: ./.github/actions/containerise
+        with:
+          git_ref: ${{ env.TAG }}
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+          tags: ${{ env.REGISTRY }}/${{ env.REPO_NAME }}/${{ env.BASE_REF }}:${{ env.TAG }}
 
   # containerisation for non-release branches
   containerise:
