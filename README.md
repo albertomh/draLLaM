@@ -81,9 +81,31 @@ guidelines when writing commit messages.
 
 ## Continuous Integration
 
+Continuous Integration pipelines run via GitHub Actions on push.  
+Pipelines are defined by YAML files in the `.github/workflows/` directory.
+There are two workflows:
+
+- When a commit on a feature branch is pushed up to GitHub - `pr.yaml`
+- When a Pull Request is merged into the 'main' branch - `ci.yaml`
+
+They both run pre-commit hooks and tests against the codebase. `ci.yaml` additionally
+Dockerises the app and pushes the image to the GitHub Container Registry.  
+The build artefact is a multi-arch Docker image to ensure compatibility with both
+Apple Silicon (ARM64) and GCP Cloud Run (x86_64).
+
 ## Deploy
 
 ### Cut a release
+
+1. Pick the semver number (`X.Y.Z`) for the release.
+1. Run `make release v=X.Y.Z`  
+   This stamps the changelog and triggers a GitHub pipeline.
+1. Wait for the pipeline to succeed. It will have raised a PR for this release.
+1. Review and merge (merge-and-rebase) the PR.
+1. This will trigger a pipeline to tag the `main` branch, create a GitHub release, build
+   a container and push it to the GitHub Container Registry.
+1. Wait for the pipeline to succeed and check a new tagged Docker container is available
+   in the project's [container registry](https://github.com/albertomh/draLLaM/pkgs/container/drallam%2Fmain).
 
 ---
 &copy; 2024 Alberto MH  
