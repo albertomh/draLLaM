@@ -19,6 +19,10 @@ build:
 	--tag $(IMAGE_NAME) \
 	.
 
+wipe:
+	@docker system prune --all --volumes --force
+	@docker builder prune --all --force
+
 run:
 	@docker run \
 	  --rm \
@@ -33,9 +37,16 @@ shell:
 	$(PROJECT_NAME) \
 	bash
 
+# cut a release and raise a pull request for it
+release:
+	@$(if $(v),,$(error please specify 'v=X.Y.Z' tag for the release))
+	./local/cut_release.sh $(v)
+
 help:
 	@echo "usage: make [target]"
 	@echo "  help                Show this help message\n"
-	@echo "  build               Build the draLLaM Docker image\n"
+	@echo "  build               Build the draLLaM Docker image"
+	@echo "  wipe                Remove unused Docker containers and wipe the build cache\n"
 	@echo "  run                 Start a draLLaM container\n"
 	@echo "  shell               Interactive shell session inside the container\n"
+	@echo "  release v=X.Y.Z     Cut a release and raise a pull request for it\n"
