@@ -1,15 +1,16 @@
-# draLLaM
+<!-- markdownlint-disable MD041 -->
+![draLLaM arrow logo](draLLaM.svg "DepositDuck draLLaM")
 
 DepositDuck's LLM service.  
 Produces a single artefact: a container image that provides an endpoint to
 generate token embeddings. Powered by `ollama`.
 
+## Develop
+
 [![GNU make](https://img.shields.io/badge/GNU_make-f2efe4?logo=gnu&logoColor=a32d2a)](https://github.com/pre-commit/pre-commit)
 [![pre-commit](https://img.shields.io/badge/pre--commit-FAB040?logo=pre-commit&logoColor=1f2d23)](https://github.com/pre-commit/pre-commit)
 [![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=ffffff)](https://docs.docker.com/manuals/)
 [![ollama](https://img.shields.io/badge/%F0%9F%A6%99%20ollama-black.svg)](https://ollama.com/)
-
-## Develop
 
 ### Prerequisites
 
@@ -25,10 +26,14 @@ To develop the DepositDuck LLM service, the following must be available locally:
 A `makefile` defines common development tasks. Run `make` or `make help` to show all
 available targets.
 
+TODO: replace `makefile` with a `justfile`.
+TODO: improve dev workflow by wrapping steps as `just` recipes.
+
 ```sh
 # ollama-specific files must be present in the Docker build context
 # NB. tried using symlinks instead but Docker didn't like them.
-blobs=".ollama/models/blobs" nomic=".ollama/models/manifests/registry.ollama.ai/library/nomic-embed-text" && \
+blobs=".ollama/models/blobs" \
+nomic=".ollama/models/manifests/registry.ollama.ai/library/nomic-embed-text" && \
 mkdir -p "$blobs" "$nomic" && \
 cp -a "$HOME/$blobs/." "./$blobs" && \
 cp -a "$HOME/$nomic/." "./$nomic"
@@ -40,7 +45,8 @@ make build
 make run
 
 # interact with the embeddings service
-# Important! Must specify the tagged model name for the `model` parameter.
+# Important! Must specify the tagged model name for
+# the `model` parameter.
 curl http://localhost:11434/api/embeddings -d '{
   "model": "nomic-embed-text:v1.5",
   "prompt": "The sky above the port was the color of television, tuned to a dead channel."
@@ -55,11 +61,13 @@ as `RUN` commands in the Dockerfile at the build stage.
 
 ```sh
 # locally on host system:
-ollama serve & sleep 10 && ollama pull nomic-embed-text:v1.5
+ollama serve & \
+sleep 10 && \
+ollama pull nomic-embed-text:v1.5
 ```
 
 This will place model blobs & manifest files in the canonical locations under `~/.ollama/`,
-which must be copied to the build directory before running `make build` (see Quickstart).
+which must be copied to the build directory before running `make build` - see [Quickstart](#quickstart-run-locally).
 
 ### Development workflow
 
@@ -116,5 +124,6 @@ image. Do this with:
 ```
 
 ---
+
 &copy; 2024 Alberto MH  
 This work is licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
