@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD041 -->
 ![draLLaM arrow logo](draLLaM.svg "DepositDuck draLLaM")
 
-DepositDuck's LLM service.  
+[DepositDuck](https://github.com/albertomh/DepositDuck)'s LLM service.  
 Produces a single artefact: a container image that provides an endpoint to
 generate token embeddings. Powered by `ollama`.
 
